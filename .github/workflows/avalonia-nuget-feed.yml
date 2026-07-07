@@ -1,6 +1,13 @@
 name: Publish Avalonia NuGet Feed
 
 on:
+  push:
+    branches:
+      - get
+    paths:
+      - .github/workflows/avalonia-nuget-feed.yml
+      - scripts/build_avalonia_nuget_feed.py
+      - svg/**
   workflow_dispatch:
     inputs:
       package_version:
@@ -33,7 +40,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          version="${{ github.event.inputs.package_version }}"
+          version="${{ github.event_name == 'workflow_dispatch' && github.event.inputs.package_version || '' }}"
           if [ -z "$version" ]; then
             version="2.0.0-stelliberty.${{ github.run_number }}"
           fi
@@ -41,7 +48,7 @@ jobs:
           repo_name="${GITHUB_REPOSITORY#*/}"
           owner_lc="$(printf '%s' "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')"
           repo_lc="$(printf '%s' "$repo_name" | tr '[:upper:]' '[:lower:]')"
-          feed_base_url="${{ github.event.inputs.feed_base_url }}"
+          feed_base_url="${{ github.event_name == 'workflow_dispatch' && github.event.inputs.feed_base_url || '' }}"
           if [ -z "$feed_base_url" ]; then
             feed_base_url="https://${owner_lc}.github.io/${repo_lc}/nuget/v3"
           fi
