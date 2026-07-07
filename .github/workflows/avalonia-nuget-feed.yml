@@ -1,0 +1,119 @@
+name: Publish Avalonia NuGet Feed
+
+on:
+  workflow_dispatch:
+    inputs:
+      package_version:
+        description: NuGet package version. Empty uses 2.0.0-stelliberty.<run_number>.
+        required: false
+        default: ''
+      feed_base_url:
+        description: Feed base URL ending with /nuget/v3. Empty uses repository GitHub Pages URL.
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: avalonia-nuget-feed
+  cancel-in-progress: false
+
+jobs:
+  publish-feed:
+    runs-on: ubuntu-latest
+    env:
+      ICONPACKS_REPOSITORY: MahApps/IconPacks.Avalonia
+      ICONPACKS_REF: main
+    steps:
+      - name: Checkout MingCute icons
+        uses: actions/checkout@v4
+
+      - name: Set package metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${{ github.event.inputs.package_version }}"
+          if [ -z "$version" ]; then
+            version="2.0.0-stelliberty.${{ github.run_number }}"
+          fi
+
+          repo_name="${GITHUB_REPOSITORY#*/}"
+          owner_lc="$(printf '%s' "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')"
+          repo_lc="$(printf '%s' "$repo_name" | tr '[:upper:]' '[:lower:]')"
+          feed_base_url="${{ github.event.inputs.feed_base_url }}"
+          if [ -z "$feed_base_url" ]; then
+            feed_base_url="https://${owner_lc}.github.io/${repo_lc}/nuget/v3"
+          fi
+
+          echo "PACKAGE_VERSION=$version" >> "$GITHUB_ENV"
+          echo "FEED_BASE_URL=$feed_base_url" >> "$GITHUB_ENV"
+          echo "Package version: $version"
+          echo "Feed URL: ${feed_base_url}/index.json"
+
+      - name: Checkout IconPacks.Avalonia
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.ICONPACKS_REPOSITORY }}
+          ref: ${{ env.ICONPACKS_REF }}
+          path: build/IconPacks.Avalonia
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            8.0.x
+
+      - name: Generate MingCute Avalonia sources
+        run: python scripts/build_avalonia_nuget_feed.py prepare-iconpack --iconpacks-dir build/IconPacks.Avalonia
+
+      - name: Pack official package IDs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/nupkg
+          dotnet pack build/IconPacks.Avalonia/src/IconPacks.Avalonia.Core/IconPacks.Avalonia.Core.csproj \
+            --configuration Release \
+            --output build/nupkg \
+            -p:PackageVersion="$PACKAGE_VERSION" \
+            -p:Version="$PACKAGE_VERSION" \
+            -p:AssemblyVersion=2.0.0.0 \
+            -p:FileVersion=2.0.0.0 \
+            -p:InformationalVersion="$PACKAGE_VERSION" \
+            -p:ContinuousIntegrationBuild=true
+          dotnet pack build/IconPacks.Avalonia/src/IconPacks.Avalonia.MingCuteIcons/IconPacks.Avalonia.MingCuteIcons.csproj \
+            --configuration Release \
+            --output build/nupkg \
+            -p:PackageVersion="$PACKAGE_VERSION" \
+            -p:Version="$PACKAGE_VERSION" \
+            -p:AssemblyVersion=2.0.0.0 \
+            -p:FileVersion=2.0.0.0 \
+            -p:InformationalVersion="$PACKAGE_VERSION" \
+            -p:ContinuousIntegrationBuild=true
+
+      - name: Build static NuGet feed
+        run: python scripts/build_avalonia_nuget_feed.py write-feed --nupkg-dir build/nupkg --output-dir build/pages --feed-base-url "$FEED_BASE_URL"
+
+      - name: Publish gh-pages branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp -d)"
+          cp -R build/pages/. "$tmp/"
+          git fetch origin gh-pages || true
+          if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
+            git switch --detach origin/gh-pages
+            git switch -C gh-pages
+            find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          else
+            git switch --orphan gh-pages
+            find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          fi
+          cp -R "$tmp"/. .
+          touch .nojekyll
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "publish avalonia nuget feed ${PACKAGE_VERSION}" || exit 0
+          git push origin gh-pages --force
