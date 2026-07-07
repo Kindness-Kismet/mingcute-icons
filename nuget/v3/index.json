@@ -1,0 +1,17 @@
+{
+  "version": "3.0.0",
+  "resources": [
+    {
+      "@id": "https://kindness-kismet.github.io/mingcute-icons/nuget/v3/flatcontainer/",
+      "@type": "PackageBaseAddress/3.0.0"
+    },
+    {
+      "@id": "https://kindness-kismet.github.io/mingcute-icons/nuget/v3/registration/",
+      "@type": "RegistrationsBaseUrl/3.6.0"
+    },
+    {
+      "@id": "https://kindness-kismet.github.io/mingcute-icons/nuget/v3/registration/",
+      "@type": "RegistrationsBaseUrl/3.0.0-beta"
+    }
+  ]
+}

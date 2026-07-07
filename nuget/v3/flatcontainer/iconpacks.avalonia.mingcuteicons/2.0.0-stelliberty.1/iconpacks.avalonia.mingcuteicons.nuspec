@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>IconPacks.Avalonia.MingCuteIcons</id>
+    <version>2.0.0-stelliberty.1</version>
+    <title>IconPacks.Avalonia.MingCuteIcons</title>
+    <authors>Jan Karger</authors>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <icon>logo_small.png</icon>
+    <projectUrl>https://github.com/MahApps/IconPacks.Avalonia</projectUrl>
+    <description>IconPacks for stylish awesome Avalonia applications.</description>
+    <releaseNotes>https://github.com/MahApps/IconPacks.Avalonia/releases</releaseNotes>
+    <copyright>Copyright © 2026 MahApps, Jan Karger</copyright>
+    <tags>Avalonia AvaloniaUI Windows UI Modern ModernUI Material XAML Library .NET C# Icon</tags>
+    <repository type="git" url="https://github.com/MahApps/IconPacks.Avalonia.git" branch="refs/heads/main" commit="ff2dff06a942f015d8c1862f090644b3e1d97e78" />
+    <dependencies>
+      <group targetFramework="net6.0">
+        <dependency id="IconPacks.Avalonia.Core" version="2.0.0-stelliberty.1" exclude="Build,Analyzers" />
+        <dependency id="Avalonia" version="11.0.13" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="8.0.5" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net8.0">
+        <dependency id="IconPacks.Avalonia.Core" version="2.0.0-stelliberty.1" exclude="Build,Analyzers" />
+        <dependency id="Avalonia" version="11.0.13" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="8.0.5" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="IconPacks.Avalonia.Core" version="2.0.0-stelliberty.1" exclude="Build,Analyzers" />
+        <dependency id="Avalonia" version="11.0.13" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="8.0.5" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

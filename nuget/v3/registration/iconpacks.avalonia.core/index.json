@@ -1,0 +1,39 @@
+{
+  "@id": "https://kindness-kismet.github.io/mingcute-icons/nuget/v3/registration/iconpacks.avalonia.core/index.json",
+  "@type": [
+    "catalog:CatalogRoot",
+    "PackageRegistration",
+    "catalog:Permalink"
+  ],
+  "count": 1,
+  "items": [
+    {
+      "@id": "https://kindness-kismet.github.io/mingcute-icons/nuget/v3/registration/iconpacks.avalonia.core/index.json#page/0",
+      "@type": "catalog:CatalogPage",
+      "commitId": "00000000-0000-0000-0000-000000000000",
+      "commitTimeStamp": "1970-01-01T00:00:00Z",
+      "count": 1,
+      "items": [
+        {
+          "@id": "https://kindness-kismet.github.io/mingcute-icons/nuget/v3/registration/iconpacks.avalonia.core/2.0.0-stelliberty.1.json",
+          "@type": "Package",
+          "commitId": "00000000-0000-0000-0000-000000000000",
+          "commitTimeStamp": "1970-01-01T00:00:00Z",
+          "catalogEntry": {
+            "@id": "https://kindness-kismet.github.io/mingcute-icons/nuget/v3/registration/iconpacks.avalonia.core/2.0.0-stelliberty.1.json",
+            "@type": "PackageDetails",
+            "id": "iconpacks.avalonia.core",
+            "version": "2.0.0-stelliberty.1",
+            "description": "IconPacks.Avalonia MingCute package built from mingcute-design/mingcute-icons.",
+            "authors": "MahApps;MingCute",
+            "licenseExpression": "MIT AND Apache-2.0",
+            "packageContent": "https://kindness-kismet.github.io/mingcute-icons/nuget/v3/flatcontainer/iconpacks.avalonia.core/2.0.0-stelliberty.1/iconpacks.avalonia.core.2.0.0-stelliberty.1.nupkg"
+          },
+          "packageContent": "https://kindness-kismet.github.io/mingcute-icons/nuget/v3/flatcontainer/iconpacks.avalonia.core/2.0.0-stelliberty.1/iconpacks.avalonia.core.2.0.0-stelliberty.1.nupkg"
+        }
+      ],
+      "lower": "2.0.0-stelliberty.1",
+      "upper": "2.0.0-stelliberty.1"
+    }
+  ]
+}
